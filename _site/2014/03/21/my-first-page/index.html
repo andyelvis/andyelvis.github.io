@@ -8,6 +8,35 @@
     <link rel="stylesheet" href="/media/css/style.css">
     <link rel="stylesheet" href="/media/css/highlight.css">
     <script type="text/javascript" src="/media/js/jquery-1.7.1.min.js"></script>
+	<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
   <script type="text/javascript">
     function setTimeSpan(){
@@ -51,11 +80,13 @@
         </nav>
         <article class="content">
         <section class="post">
-<blockquote><p><strong>#andyelvis:</strong> My first github jekyll page.</p></blockquote>
+<blockquote>
+  <p><strong>#andyelvis:</strong> My first github jekyll page.</p>
+</blockquote>
 
 <hr />
 
-<h2>我的第一个GitHub Jekyll页面诞生！</h2>
+<h2 id="github-jekyll">我的第一个GitHub Jekyll页面诞生！</h2>
 
 <hr />
 

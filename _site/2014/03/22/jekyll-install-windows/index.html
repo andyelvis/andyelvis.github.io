@@ -8,6 +8,35 @@
     <link rel="stylesheet" href="/media/css/style.css">
     <link rel="stylesheet" href="/media/css/highlight.css">
     <script type="text/javascript" src="/media/js/jquery-1.7.1.min.js"></script>
+	<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
   <script type="text/javascript">
     function setTimeSpan(){
@@ -51,68 +80,69 @@
         </nav>
         <article class="content">
         <section class="post">
-<h2>安装Ruby环境</h2>
+<h2 id="ruby">安装Ruby环境</h2>
 
 <p>1、去<a href="http://rubyinstaller.org/downloads/">http://rubyinstaller.org/downloads/</a>下载Ruby 2.0.0-p451安装，根据自己的系统版本选择32位还是64位版本，假设安装在D:\program_file\Ruby200-x64目录下，记得安装的时候选上“Add Ruby executables to your PATH”（添加系统环境变量）。</p>
 
 <p>2、在第一步的下载页面，根据自己的系统版本以及Ruby版本，选择合适的DEVELOPMENT KIT版本下载安装，我安装的是64位的Ruby2.0版本，所以这里我下载的是DevKit-mingw64-64-4.7.2-20130224-1432-sfx.exe，假设安装在D:\program_file\ruby_devkit目录下。</p>
 
-<p>3、打开cmd，进入D:\program_file\ruby_devkit目录，运行如下命令：<br/>
-ruby dk.rb init<br/>
-这时会在当前目录下生成config.yml文件。修改config.yml文件，在文件末尾添加上Ruby的安装路径：<br/>
-- D:/program_file/Ruby200-x64<br/>
-安装DEVELOPMENT KIT，运行如下命令：<br/>
+<p>3、打开cmd，进入D:\program_file\ruby_devkit目录，运行如下命令：<br />
+ruby dk.rb init<br />
+这时会在当前目录下生成config.yml文件。修改config.yml文件，在文件末尾添加上Ruby的安装路径：<br />
+- D:/program_file/Ruby200-x64<br />
+安装DEVELOPMENT KIT，运行如下命令：<br />
 ruby dk.rb install</p>
 
 <hr />
 
-<h2>安装Jekyll</h2>
+<h2 id="jekyll">安装Jekyll</h2>
 
-<p>1、进入D:\program_file\Ruby200-x64\bin目录， 查看默认的gem镜像源列表：<br/>
-gem sources -l<br/>
-删除默认的源列表，将淘宝的镜像加到gem的镜像列表里：<br/>
-gem sources --remove http://rubygems.org/<br/>
-gem sources --remove https://rubygems.org/<br/>
+<p>1、进入D:\program_file\Ruby200-x64\bin目录， 查看默认的gem镜像源列表：<br />
+gem sources -l<br />
+删除默认的源列表，将淘宝的镜像加到gem的镜像列表里：<br />
+gem sources –remove http://rubygems.org/<br />
+gem sources –remove https://rubygems.org/<br />
 gem sources -a http://ruby.taobao.org/</p>
 
-<p>2、安装Jekyll，默认安装的是Jekyll 1.4.3版本，这个版本在windows下运行会出错，所以这里安装1.4.2版本：<br/>
-gem install jekyll --version "=1.4.2"</p>
+<p>2、安装Jekyll，默认安装的是Jekyll 1.4.3版本，这个版本在windows下运行会出错，所以这里安装1.4.2版本：<br />
+gem install jekyll –version “=1.4.2”</p>
 
-<p>3、Jekyll默认用maruku来解析markdown语言，你也可以用别的程序来解析，比如rdiscount或kramdown，都给装上吧：<br/>
+<p>3、Jekyll默认用maruku来解析markdown语言，你也可以用别的程序来解析，比如rdiscount或kramdown，都给装上吧：<br />
 gem install rdiscount kramdown</p>
 
 <hr />
 
-<h2>安装Pygments</h2>
+<h2 id="pygments">安装Pygments</h2>
 
 <p>1、安装python2.7版本，并把python的安装路径加到系统的path环境变量中。</p>
 
-<p>2、安装easy_install，官方推荐的方式的是下载<a href="https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py">https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py</a>，然后运行<br/>
-python ez_setup.py。<br/>
-另一种方式是下载<a href="http://python-distribute.org/distribute_setup.py">http://python-distribute.org/distribute_setup.py</a>，然后运行<br/>
+<p>2、安装easy_install，官方推荐的方式的是下载<a href="https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py">https://bitbucket.org/pypa/setuptools/raw/bootstrap/ez_setup.py</a>，然后运行<br />
+python ez_setup.py。<br />
+另一种方式是下载<a href="http://python-distribute.org/distribute_setup.py">http://python-distribute.org/distribute_setup.py</a>，然后运行<br />
 python distribute_setup.py。</p>
 
-<p>3、安装Pygments，进入easy_install的安装目录，一般是在python的安装目录的Scripts目录下，运行如下命令：<br/>
+<p>3、安装Pygments，进入easy_install的安装目录，一般是在python的安装目录的Scripts目录下，运行如下命令：<br />
 easy_install Pygments</p>
 
-<p>4、检查pygments.rb的版本，运行gem list查看pygments.rb的版本，如果不是0.5.0版本，需要先移除然后在安装0.5.0版本，非0.5.0版本与Jekyll不太兼容：<br/>
-gem uninstall pygments.rb --version "=0.5.4"<br/>
-gem install pygments.rb --version "=0.5.0"</p>
+<p>4、检查pygments.rb的版本，运行gem list查看pygments.rb的版本，如果不是0.5.0版本，需要先移除然后在安装0.5.0版本，非0.5.0版本与Jekyll不太兼容：<br />
+gem uninstall pygments.rb –version “=0.5.4”<br />
+gem install pygments.rb –version “=0.5.0”</p>
 
 <hr />
 
-<h2>运行Jekyll</h2>
+<h2 id="jekyll-1">运行Jekyll</h2>
 
-<p>初始化一个站点，运行命令：<br/>
-jekyll new myblog<br/>
-会在当前目录下生成myblog目录，进入这个目录，然后启动jekyll：<br/>
-cd myblog<br/>
-jekyll serve<br/>
-然后在浏览器中输入<a href="http://localhost:4000">http://localhost:4000</a>查看。<br/>
-如果出现中文编码的问题，只需在myblog目录下的_config.yml文件中添加：<br/>
+<p>初始化一个站点，运行命令：<br />
+jekyll new myblog<br />
+会在当前目录下生成myblog目录，进入这个目录，然后启动jekyll：<br />
+cd myblog<br />
+jekyll serve<br />
+然后在浏览器中输入<a href="http://localhost:4000">http://localhost:4000</a>查看。<br />
+如果出现中文编码的问题，只需在myblog目录下的_config.yml文件中添加：<br />
 encoding: utf-8</p>
 
 <hr />
+
 
 </section>
 <section class="meta">
@@ -122,7 +152,7 @@ encoding: utf-8</p>
 <span>
 	<a  href="/2014/03/21/my-first-page/" class="pageNav"  >Previous</a>
 	&nbsp;&nbsp;&nbsp;
-	<a   class="pageNavInvalid"  >Next</a>
+	<a  href="/2014/04/02/text-classifier-using-naivebabyes/" class="pageNav"  >Next</a>
 </span>
 <hr>
 <span class="author">

@@ -8,6 +8,35 @@
     <link rel="stylesheet" href="/media/css/style.css">
     <link rel="stylesheet" href="/media/css/highlight.css">
     <script type="text/javascript" src="/media/js/jquery-1.7.1.min.js"></script>
+	<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
   </head>
   <script type="text/javascript">
     function setTimeSpan(){
@@ -51,16 +80,15 @@
         </nav>
         <article class="content">
         <section class="post">
-<div id='tag_cloud'>
+<div id="tag_cloud">
 
 <a href="#other" title="other" rel="1">other (1)</a>
 
 <a href="#github" title="github" rel="1">github (1)</a>
 
+<a href="#machine learning" title="machine learning" rel="1">machine learning (1)</a>
+
 </div>
-
-
-
 
 <ul class="listing">
 
@@ -80,15 +108,17 @@
   </li>
 
 
+  <li class="listing-seperator" id="machine learning">machine learning</li>
+
+  <li class="listing-item">
+  <time datetime="2014-04-02">2014-04-02</time>
+  <a href="/2014/04/02/text-classifier-using-naivebabyes/" title="使用朴素贝叶斯进行文本分类">使用朴素贝叶斯进行文本分类</a>
+  </li>
+
+
 </ul>
 
-
-
-
 <script src="/media/js/jquery.tagcloud.js" type="text/javascript" charset="utf-8"></script>
-
-
-<p></p>
 
 <script language="javascript">
 $.fn.tagcloud.defaults = {
