@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="andyelvis" />
+    <title>文本分类的特征选择方法 | andyelvis</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/media/css/style.css">
+    <link rel="stylesheet" href="/media/css/highlight.css">
+    <script type="text/javascript" src="/media/js/jquery-1.7.1.min.js"></script>
+	<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+  <script type="text/javascript">
+    function setTimeSpan(){
+    	var date = new Date();
+    	timeSpan.innerText=date.format('yyyy-MM-dd hh:mm:ss');
+    }
+    
+    Date.prototype.format = function(format)
+		{
+    var o =
+    	{
+    	    "M+" : this.getMonth()+1, //month
+    	    "d+" : this.getDate(),    //day
+    	    "h+" : this.getHours(),   //hour
+    	    "m+" : this.getMinutes(), //minute
+    	    "s+" : this.getSeconds(), //second
+    	    "q+" : Math.floor((this.getMonth()+3)/3),  //quarter
+    	    "S" : this.getMilliseconds() //millisecond
+    	}
+    	if(/(y+)/.test(format))
+    	format=format.replace(RegExp.$1,(this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    	for(var k in o)
+    	if(new RegExp("("+ k +")").test(format))
+    	format = format.replace(RegExp.$1,RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+    	return format;
+		}
+  </script>
+  <body onLoad="setInterval(setTimeSpan,1000);">
+    <div id="container">
+      <div id="main" role="main">
+        <header>
+        <h1>文本分类的特征选择方法</h1>
+        </header>
+        <nav>
+        <span><a title="home page" class="" href="/">Home</a></span>
+        <span><a title="about" class="" href="/about/">About</a></span>
+        <span><a title="guestbook" class="" href="/guestbook/">Guestbook</a></span>
+        <span><a title="categories" class="" href="/categories/">Categories</a></span>
+        <span><a title="tags" class="" href="/tags/">Tags</a></span>
+        <span><a title="links" class="" href="/links/">Links</a></span>
+        </nav>
+        <article class="content">
+        <section class="post">
+<h2 id="dfdocument-frequency">1、文档频率DF（Document Frequency）</h2>
+
+<p>文档频率表示一个单词出现的文档数目。我们计算训练语料中的每一个单词的文档频率，对于文档频率小于预先定义阈值的单词，将其从特征空间中移除。基于的基本假设是很少出现的单词既对分类预测没有多大意义，也对全局性能没有什么影响。移除文档频率比较小的单词可以有效降低特征空间的维度，如果这些单词同时也是噪音单词的话，对分类准确性也有提升。</p>
+
+<p>文档频率阈值化是降低词表维度最简单的方式，它可以以相对训练文档数目线性增长的计算复杂度，扩展到非常大训练语料。然而，通常将其看做提高效率的一种特定方式，而不是选取特征的原则标准。</p>
+
+<hr />
+
+<h2 id="iginformation-gain">2、信息增益IG（Information Gain）</h2>
+
+<p>在机器学习领域，信息增益常常被用作评估单词好坏的标准。通过知道一个单词在一篇文档中是否出现，衡量这个单词可以给分类预测带来多少信息量。假设$\{c_i\}^{m}_{i=1}$表示目标空间里类别的集合，那么单词t的信息增益可以表示如下：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+
+\begin{align*}
+G(t)=&-\sum^{m}_{i=1}P_r(c_i)logP_r(c_i)\\
++&P_r(t)\sum^{m}_{i=1}P_r(c_i|t)logP_r(c_i|t)\\
++&P_r(\overline{t})\sum^{m}_{i=1}P_r(c_i|\overline{t})logP_r(c_i|\overline{t})
+\end{align*}
+ %]]></script>
+
+<p>给定一个训练语料，计算每一个单词的信息增益，对于信息增益小于预先定义阈值的单词，将其从特征空间中移除。计算包括给定一个单词，一个类出现的条件概率的估计，以及信息熵的计算。</p>
+
+<hr />
+
+<h2 id="mimutual-information">3、互信息MI（Mutual information）</h2>
+
+<p>互信息经常被用在词汇联想等统计语言模型相关的应用中。考虑训练语料中的一个单词t和一个类别c，A表示t和c共同出现的次数，B表示t出现c没有出现的次数，C表示c出现t没有出现的次数，N表示总文档数，那么t和c之间的互信息定义如下：</p>
+
+<script type="math/tex; mode=display">
+I(t,c)=log\frac{P_r(t∧c)}{P_r(t)×P_r(c)}
+</script>
+
+<p>估计公式如下：</p>
+
+<script type="math/tex; mode=display">
+I(t,c)≈log\frac{A×N}{(A+C)×(A+B)}
+</script>
+
+<p>如果t和c是相互独立的，那么$I(t,c)$就会有一个零自然价值问题。为了度量一个单词在全局特征选择中的好坏，我们用如下两种方式组合单词在不同类别下的分数：</p>
+
+<script type="math/tex; mode=display">
+I_{avg}(t)=\sum^{m}_{i=1}P_r(c_i)I(t,c_i)
+</script>
+
+<script type="math/tex; mode=display">
+I_{max}(t)={max}^{m}_{i=1}\{I(t,c_i)\}
+</script>
+
+<p>互信息的一个缺点是分数会被单词的边缘概率严重影响，从如下等价的形式看：</p>
+
+<script type="math/tex; mode=display">
+I(t,c)=logP_r(t|c)-logP_r(t)
+</script>
+
+<p>对于那些有着相等条件概率$P_r(t|c)$的单词，很少有单词会比常见单词的分数更高。
+因此，在有不同频率的单词之间，分数不具有可比性。</p>
+
+<hr />
+
+<h2 id="chi2chi">4、${\chi}^2$统计（CHI）</h2>
+
+<p>${\chi}^2$统计度量单词t和类别c之间是否缺乏独立性，可以用自由度与${\chi}^2$分布比较来判断偏激性。假设A表示t和c共同出现的次数，B表示t出现c没有出现的次数，C表示c出现t没有出现的次数，D表示c和t都没有出现的次数，N表示总文档数，那么单词好坏的度量可以定义如下：</p>
+
+<script type="math/tex; mode=display">
+{\chi}^2(t,c)=\frac{N\times(AD-CB)^2}{(A+C)\times(B+D)\times(A+B)\times(C+D)}
+</script>
+
+<p>如果t和c是相互独立的，那么${\chi}^2$统计有个零自然值的问题。为每个类计算单词和类别之间的${\chi}^2$统计，然后将单词相对特定类别的分数合并成两个分数：</p>
+
+<script type="math/tex; mode=display">
+{\chi}^2_{avg}(t)=\sum^{m}_{i=1}P_r(c_i){\chi}^2(t,c_i)
+</script>
+
+<script type="math/tex; mode=display">
+{\chi}^2_{max}(t)={max}^{m}_{i=1}\{ {\chi}^2(t,c_i) \}
+</script>
+
+<p>CHI和MI的最大区别是${\chi}^2$是一个归一化值，因此同一个类别下不同单词的${\chi}^2$值是可以比较的。但是对于低频词，这个归一化的特性会失去，所以${\chi}^2$统计对于低频词是不可靠的。</p>
+
+<hr />
+
+<h2 id="term-strength-ts">5、Term Strength (TS)</h2>
+
+<p>TS方法基于一个单词很可能出现在密切相关的文档中的理念来估计单词的重要性。TS的计算是一个条件概率估计，即如果有一对相关文档x和y，一个单词出现在x中，那么这个单词也出现在y中的条件概率：</p>
+
+<script type="math/tex; mode=display">
+s(t)=P_r(t \in y|t \in x)
+</script>
+
+<p>TS基于文档聚类，假设相关文档会共用许多单词，那么出现在相关文档最重叠区域的单词是最有信息量的。TS计算所需的参数就是文档相似度阈值。两篇文档如何接近才被认为是一个相关对。这里使用AREL，在阈值调优的时候，每篇文档的平均相关文档数。我们计算训练数据集中所有文档的相似度得分，然后在文档对的相似度值上尝试不同的阈值，选择最合理的阈值。AERL的值不断的通过实验选择，看它的优化效果有多好。根据已有的一些研究结果，AERL的值在10到20之间会达到满意的效果。</p>
+
+<hr />
+
+<h2 id="section">参考资料</h2>
+
+<ul>
+  <li><a href="http://courses.ischool.berkeley.edu/i256/f06/papers/yang97comparative.pdf">a comparative study on feature selection in text categorization</a></li>
+</ul>
+
+</section>
+<section class="meta">
+
+<br/>
+<br/>
+<span>
+	<a  href="/2014/04/02/text-classifier-using-naivebabyes/" class="pageNav"  >Previous</a>
+	&nbsp;&nbsp;&nbsp;
+	<a   class="pageNavInvalid"  >Next</a>
+</span>
+<hr>
+<span class="author">
+  <a href="http://andyelvis.github.io">andyelvis</a>
+</span>
+<span class="time">
+  /
+  <time datetime="2014-05-14">2014-05-14</time>
+</span>
+<br />
+<span class="license">
+  Published under <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>
+</span>
+
+<span class="categories">
+  in categories
+  
+  <a href="/categories/#machine learning" title="machine learning">machine learning</a>&nbsp;
+  
+</span>
+
+
+<span class="tags">
+  tagged with 
+  
+  <a href="/tags/#text categorization" title="text categorization">text categorization</a>&nbsp;
+  
+</span>
+
+</section>
+<!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"andyelvis"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+
+
+        </article>
+      </div>
+
+    <footer>
+        <p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> & <a href="http://pages.github.com">GitHub</a> | Copyright 2014 - 2014 by <a href="/about/">andyelvis</a> | <span class="label label-info" id="timeSpan"></span></small></p>
+    </footer>
+
+    </div>
+	
+  </body>
+</html>
