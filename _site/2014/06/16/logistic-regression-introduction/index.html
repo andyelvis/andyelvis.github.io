@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="andyelvis" />
+    <title>逻辑斯蒂回归模型 | andyelvis</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/media/css/style.css">
+    <link rel="stylesheet" href="/media/css/highlight.css">
+    <script type="text/javascript" src="/media/js/jquery-1.7.1.min.js"></script>
+	<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+  <script type="text/javascript">
+    function setTimeSpan(){
+    	var date = new Date();
+    	timeSpan.innerText=date.format('yyyy-MM-dd hh:mm:ss');
+    }
+    
+    Date.prototype.format = function(format)
+		{
+    var o =
+    	{
+    	    "M+" : this.getMonth()+1, //month
+    	    "d+" : this.getDate(),    //day
+    	    "h+" : this.getHours(),   //hour
+    	    "m+" : this.getMinutes(), //minute
+    	    "s+" : this.getSeconds(), //second
+    	    "q+" : Math.floor((this.getMonth()+3)/3),  //quarter
+    	    "S" : this.getMilliseconds() //millisecond
+    	}
+    	if(/(y+)/.test(format))
+    	format=format.replace(RegExp.$1,(this.getFullYear()+"").substr(4 - RegExp.$1.length));
+    	for(var k in o)
+    	if(new RegExp("("+ k +")").test(format))
+    	format = format.replace(RegExp.$1,RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+    	return format;
+		}
+  </script>
+  <body onLoad="setInterval(setTimeSpan,1000);">
+    <div id="container">
+      <div id="main" role="main">
+        <header>
+        <h1>逻辑斯蒂回归模型</h1>
+        </header>
+        <nav>
+        <span><a title="home page" class="" href="/">Home</a></span>
+        <span><a title="about" class="" href="/about/">About</a></span>
+        <span><a title="guestbook" class="" href="/guestbook/">Guestbook</a></span>
+        <span><a title="categories" class="" href="/categories/">Categories</a></span>
+        <span><a title="tags" class="" href="/tags/">Tags</a></span>
+        <span><a title="links" class="" href="/links/">Links</a></span>
+        </nav>
+        <article class="content">
+        <section class="post">
+<h2 id="logistic-distribution">1、逻辑斯蒂分布（logistic distribution）</h2>
+
+<p>设X是连续随机变量，X服从逻辑斯蒂分布是指X具有下列分布函数和密度函数：</p>
+
+<script type="math/tex; mode=display">
+F(x)=P(X \le x)=\frac{1}{1+e^{-(x-\mu)/\gamma}}
+</script>
+
+<script type="math/tex; mode=display">
+f(x)=F^{'}(x)=\frac{e^{-(x-\mu)/\gamma}}{\gamma(1+e^{-(x-\mu)/\gamma})^2}
+</script>
+
+<p>$\mu$为位置参数，$\gamma&gt;0$为形状参数。</p>
+
+<p>逻辑斯蒂分布的密度函数f(x)和分布函数F(x)的图形如下图所示：
+<img src="/images/logit_function.png" alt="" />
+分布函数属于逻辑斯蒂函数，其图形是一条S形曲线。改曲线以点$(\mu,\frac{1}{2})$为中心对称，即满足：</p>
+
+<script type="math/tex; mode=display">
+F(-x + \mu)-\frac{1}{2}=-F(x - \mu)+\frac{1}{2}
+</script>
+
+<p>曲线在中心附近增长速度较快，在两端增长速度较慢。形状参数$\gamma$的值越小，曲线在中心附近增长得越快。</p>
+
+<hr />
+
+<p>2、二项逻辑斯蒂回归模型</p>
+
+<p>二项逻辑斯蒂回归模型是一种分类模型，由条件概率$P(Y|X)$表示，形式为参数化的逻辑斯蒂分布。
+随机变量X取值为实数，随机变量Y取值为1或0。通过监督学习的方法来估计模型参数。</p>
+
+<p>二项逻辑斯蒂回归模型是如下的条件概率分布：</p>
+
+<script type="math/tex; mode=display">
+P(Y=1|x)=\frac{exp(w \cdot x+b)}{1+exp(w \cdot x+b)}
+</script>
+
+<script type="math/tex; mode=display">
+P(Y=0|x)=\frac{1}{1+exp(w \cdot x+b)}
+</script>
+
+<p>$x \in R^n$是输入，$Y \in \{0,1\}$是输出，$w \in R^n$和$b \in R$是参数，w称为权值向量，b称为偏置，$w \cdot x$为w和x的内积。</p>
+
+<p>对于给定的输入实例x，按照公式求得$P(Y=1|x)$和$P(Y=0|x)$，
+然后比较这两个条件概率的大小，将实例x分到概率值较大的那一类。 </p>
+
+<p>为了方便，可以将权值向量和输入向量加以扩充，仍记作w，x，
+即$w=(w^{(1)},w^{(2)},\cdot \cdot \cdot w^{(n)},b)^T$，$x=(x^{(1)},x^{(2)},\cdot \cdot \cdot x^{(n)},1)^T$。
+这时，逻辑斯蒂回归模型如下：</p>
+
+<script type="math/tex; mode=display">
+P(Y=1|x)=\frac{exp(w \cdot x)}{1+exp(w \cdot x)}
+</script>
+
+<script type="math/tex; mode=display">
+P(Y=0|x)=\frac{1}{1+exp(w \cdot x)}
+</script>
+
+<p>一个事件的几率是指该事件发生的概率与不发生概率的比值。如果事件发生的概率是p，那么该事件的几率是$\frac{p}{1-p}$，该事件的对数几率或logit函数是：</p>
+
+<script type="math/tex; mode=display">
+logit(p)=log\frac{p}{1-p}
+</script>
+
+<p>对逻辑斯蒂回归而言，logit函数是：</p>
+
+<script type="math/tex; mode=display">
+log\frac{P(Y=1|x)}{1-P(Y=1|x)}=w \cdot x
+</script>
+
+<p>这就是说，在逻辑斯蒂回归模型中，输入Y=1的对数几率是输入x的线性函数。或者说，输出Y=1的对数几率是由输入x的线性函数表示的模型，即逻辑斯蒂回归模型。</p>
+
+<hr />
+
+<p>3、模型参数估计</p>
+
+<p>逻辑斯蒂回归模型学习时，对于给定的训练数据集$T=\{(x_1,y_1),(x_2,y_2),\cdot \cdot \cdot (x_N,y_N)\}$，其中，$x_i \in R^n$，$y_i \in \{0,1\}$，可以应用极大似然估计法估计参数模型，从而得到逻辑斯蒂回归模型。</p>
+
+<p>设：</p>
+
+<script type="math/tex; mode=display">
+P(Y=1|x)=\pi(x)，P(Y=0|x)=1-\pi(x)
+</script>
+
+<p>似然函数为：</p>
+
+<script type="math/tex; mode=display">
+\prod_{i=1}^{N}[\pi(x_i)]^{y_i}[1-\pi(x_i)]^{1-y_i}
+</script>
+
+<p>对数似然函数为：</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+
+\begin{align*}
+L(w)=&\sum^{N}_{i=1}[y_ilog\pi(x_i)+(1-y_i)log(1-\pi(x_i))]\\
+=&\sum^{N}_{i=1}[y_ilog\frac{\pi(x_i)}{1-\pi(x_i)}+log(1-\pi(x_i))]\\
+=&\sum^{N}_{i=1}[y_i(w \cdot x_i)-log(1+exp(w \cdot x_i))]
+\end{align*}
+ %]]></script>
+
+<p>对L(w)求极大值，得到w的估计值。</p>
+
+<p>问题变成了以对数似然函数为目标函数的最优化问题。逻辑斯蒂回归学习中通常采用的方法是梯度下降法和拟牛顿法。</p>
+
+</section>
+<section class="meta">
+
+<br/>
+<br/>
+<span>
+	<a  href="/2014/05/14/feature-selection-in-text-classfication/" class="pageNav"  >Previous</a>
+	&nbsp;&nbsp;&nbsp;
+	<a   class="pageNavInvalid"  >Next</a>
+</span>
+<hr>
+<span class="author">
+  <a href="http://andyelvis.github.io">andyelvis</a>
+</span>
+<span class="time">
+  /
+  <time datetime="2014-06-16">2014-06-16</time>
+</span>
+<br />
+<span class="license">
+  Published under <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/">(CC) BY-NC-SA</a>
+</span>
+
+<span class="categories">
+  in categories
+  
+  <a href="/categories/#machine learning" title="machine learning">machine learning</a>&nbsp;
+  
+</span>
+
+
+<span class="tags">
+  tagged with 
+  
+  <a href="/tags/#logistic regression" title="logistic regression">logistic regression</a>&nbsp;
+  
+</span>
+
+</section>
+<!-- Duoshuo Comment BEGIN -->
+	<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"andyelvis"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- Duoshuo Comment END -->
+
+
+        </article>
+      </div>
+
+    <footer>
+        <p><small>Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a> & <a href="http://pages.github.com">GitHub</a> | Copyright 2014 - 2014 by <a href="/about/">andyelvis</a> | <span class="label label-info" id="timeSpan"></span></small></p>
+    </footer>
+
+    </div>
+	
+  </body>
+</html>
