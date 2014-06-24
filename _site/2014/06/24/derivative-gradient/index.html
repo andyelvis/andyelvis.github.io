@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="andyelvis" />
-    <title>逻辑斯蒂回归模型 | andyelvis</title>
+    <title>方向导数和梯度 | andyelvis</title>
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="/media/css/style.css">
     <link rel="stylesheet" href="/media/css/highlight.css">
@@ -68,7 +68,7 @@
     <div id="container">
       <div id="main" role="main">
         <header>
-        <h1>逻辑斯蒂回归模型</h1>
+        <h1>方向导数和梯度</h1>
         </header>
         <nav>
         <span><a title="home page" class="" href="/">Home</a></span>
@@ -80,110 +80,63 @@
         </nav>
         <article class="content">
         <section class="post">
-<h2 id="logistic-distribution">1、逻辑斯蒂分布（logistic distribution）</h2>
+<h2 id="section">方向导数</h2>
 
-<p>设X是连续随机变量，X服从逻辑斯蒂分布是指X具有下列分布函数和密度函数：</p>
-
-<script type="math/tex; mode=display">
-F(x)=P(X \le x)=\frac{1}{1+e^{-(x-\mu)/\gamma}}
-</script>
+<p>在微积分课程中，函数在某一点的导数代表了函数在该点的变化率。
+微分和积分，它们的定义都是建立在极限的基础上。
+对于单变量函数$f(x)$，它在$x_0$处导数是：函数的改变量与自变量的改变量比值的极限。</p>
 
 <script type="math/tex; mode=display">
-f(x)=F^{'}(x)=\frac{e^{-(x-\mu)/\gamma}}{\gamma(1+e^{-(x-\mu)/\gamma})^2}
+f'(x_0)=\lim_{\Delta x \to 0}\frac{f(x_0 + \Delta x)-f(x_0)}{\Delta x}
 </script>
 
-<p>$\mu$为位置参数，$\gamma&gt;0$为形状参数。</p>
+<p>对于单变量函数，自变量只有一个，当$x$趋近于$x_0$时只能在直线上变动，移动的方向只有左右两方。</p>
 
-<p>逻辑斯蒂分布的密度函数f(x)和分布函数F(x)的图形如下图所示：
-<img src="/images/logit_function.png" alt="" />
-分布函数属于逻辑斯蒂函数，其图形是一条S形曲线。改曲线以点$(\mu,\frac{1}{2})$为中心对称，即满足：</p>
+<p>然而，对于多变量函数，自变量有多个，表示自变量的点在一个区域内变动，不仅可以移动距离，而且可以按任意的方向来移动同一段距离。
+因此，函数的变化不仅与移动的距离有关，而且与移动的方向有关。函数的变化率是与方向有关的。
+这也才有了方向导数的定义，即某一点在某一趋近方向上的到数值。
+假设给定函数$u=u(M)$，取一点$M_0=(x_0,y_0,z_0)$，L是$M_0$出发的任一半直线，则u在$M_0$点L的方向导数定义为：</p>
 
 <script type="math/tex; mode=display">
-F(-x + \mu)-\frac{1}{2}=-F(x - \mu)+\frac{1}{2}
+(\frac{\partial u}{\partial L})_{M_0}=\lim_{M \to M_0}_{M \in L}\frac{u(M)-u(M_0)}{|MM_0|}
 </script>
-
-<p>曲线在中心附近增长速度较快，在两端增长速度较慢。形状参数$\gamma$的值越小，曲线在中心附近增长得越快。</p>
 
 <hr />
 
-<p>2、二项逻辑斯蒂回归模型</p>
+<h2 id="section-1">梯度</h2>
 
-<p>二项逻辑斯蒂回归模型是一种分类模型，由条件概率$P(Y|X)$表示，形式为参数化的逻辑斯蒂分布。
-随机变量X取值为实数，随机变量Y取值为1或0。通过监督学习的方法来估计模型参数。</p>
-
-<p>二项逻辑斯蒂回归模型是如下的条件概率分布：</p>
+<p>有了方向导数的定义，进一步来推导方向导数的表示。假设L的方向余弦为$(\cos\alpha,\cos\beta,\cos\gamma)$，则L上的M可以表示为：</p>
 
 <script type="math/tex; mode=display">
-P(Y=1|x)=\frac{exp(w \cdot x+b)}{1+exp(w \cdot x+b)}
+x=x_0+t\cos\alpha, y=y_0+t\cos\beta,z=z_0+t\cos\gamma
 </script>
 
 <script type="math/tex; mode=display">
-P(Y=0|x)=\frac{1}{1+exp(w \cdot x+b)}
+t=|MM_0|
 </script>
 
-<p>$x \in R^n$是输入，$Y \in \{0,1\}$是输出，$w \in R^n$和$b \in R$是参数，w称为权值向量，b称为偏置，$w \cdot x$为w和x的内积。</p>
-
-<p>对于给定的输入实例x，按照公式求得$P(Y=1|x)$和$P(Y=0|x)$，
-然后比较这两个条件概率的大小，将实例x分到概率值较大的那一类。 </p>
-
-<p>为了方便，可以将权值向量和输入向量加以扩充，仍记作w，x，
-即$w=(w^{(1)},w^{(2)},\cdot \cdot \cdot w^{(n)},b)^T$，$x=(x^{(1)},x^{(2)},\cdot \cdot \cdot x^{(n)},1)^T$。
-这时，逻辑斯蒂回归模型如下：</p>
-
-<script type="math/tex; mode=display">
-P(Y=1|x)=\frac{exp(w \cdot x)}{1+exp(w \cdot x)}
-</script>
-
-<script type="math/tex; mode=display">
-P(Y=0|x)=\frac{1}{1+exp(w \cdot x)}
-</script>
-
-<p>一个事件的几率是指该事件发生的概率与不发生概率的比值。如果事件发生的概率是p，那么该事件的几率是$\frac{p}{1-p}$，该事件的对数几率或logit函数是：</p>
-
-<script type="math/tex; mode=display">
-logit(p)=log\frac{p}{1-p}
-</script>
-
-<p>对逻辑斯蒂回归而言，logit函数是：</p>
-
-<script type="math/tex; mode=display">
-log\frac{P(Y=1|x)}{1-P(Y=1|x)}=w \cdot x
-</script>
-
-<p>这就是说，在逻辑斯蒂回归模型中，输入Y=1的对数几率是输入x的线性函数。或者说，输出Y=1的对数几率是由输入x的线性函数表示的模型，即逻辑斯蒂回归模型。</p>
-
-<hr />
-
-<p>3、模型参数估计</p>
-
-<p>逻辑斯蒂回归模型学习时，对于给定的训练数据集$T=\{(x_1,y_1),(x_2,y_2),\cdot \cdot \cdot (x_N,y_N)\}$，其中，$x_i \in R^n$，$y_i \in \{0,1\}$，可以应用极大似然估计法估计参数模型，从而得到逻辑斯蒂回归模型。</p>
-
-<p>设：</p>
-
-<script type="math/tex; mode=display">
-P(Y=1|x)=\pi(x)，P(Y=0|x)=1-\pi(x)
-</script>
-
-<p>似然函数为：</p>
-
-<script type="math/tex; mode=display">
-\prod_{i=1}^{N}[\pi(x_i)]^{y_i}[1-\pi(x_i)]^{1-y_i}
-</script>
-
-<p>对数似然函数为：</p>
+<p>于是u对L的方向导数为：</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
 
 \begin{align*}
-L(w)=&\sum^{N}_{i=1}[y_ilog\pi(x_i)+(1-y_i)log(1-\pi(x_i))]\\
-=&\sum^{N}_{i=1}[y_ilog\frac{\pi(x_i)}{1-\pi(x_i)}+log(1-\pi(x_i))]\\
-=&\sum^{N}_{i=1}[y_i(w \cdot x_i)-log(1+exp(w \cdot x_i))]
+(\frac{\partial u}{\partial L})_{M_0}=&\lim_{t \to 0}\frac{\Delta u}{t}\\
+=&\lim_{t \to 0}\frac{\frac{\partial u}{\partial x} \Delta x + \frac{\partial u}{\partial y} \Delta y + \frac{\partial u}{\partial z} \Delta z + o(t)}{t}\\
+=&\lim_{t \to 0}\frac{t(\frac{\partial u}{\partial x} \cos\alpha + \frac{\partial u}{\partial y} \cos\beta + \frac{\partial u}{\partial z} \cos\gamma) + o(t)}{t}\\
+=&\frac{\partial u}{\partial x} \cos\alpha + \frac{\partial u}{\partial y} \cos\beta + \frac{\partial u}{\partial z} \cos\gamma
 \end{align*}
  %]]></script>
 
-<p>对L(w)求极大值，得到w的估计值。</p>
+<p>设向量$\overrightarrow{n}=(\frac{\partial u}{\partial x},\frac{\partial u}{\partial y},\frac{\partial u}{\partial z})$，
+L方向可以表示为$\overrightarrow{l}=(\cos\alpha,\cos\beta,\cos\gamma)$。因为l是一个单位向量，所以：</p>
 
-<p>问题变成了以对数似然函数为目标函数的最优化问题。逻辑斯蒂回归学习中通常采用的方法是梯度下降法和拟牛顿法。</p>
+<script type="math/tex; mode=display">
+(\frac{\partial u}{\partial L})_{M_0}=n \cdot l=|n|\cos \theta
+</script>
+
+<p>这表示了L上的方向向量其实是n在L方向上的投影。当L的方向变化，投影量随之改变，也就代表了不同的方向导数。
+当L与n同向时，$(\frac{\partial u}{\partial L})_{M_0}$便取得最大值|n|，我们称n为u在该点的梯度。
+可以看到梯度即是某一点最大的方向导数，沿梯度方向函数有最大的变化率（正向增加，逆向减少）。</p>
 
 </section>
 <section class="meta">
@@ -191,9 +144,9 @@ L(w)=&\sum^{N}_{i=1}[y_ilog\pi(x_i)+(1-y_i)log(1-\pi(x_i))]\\
 <br/>
 <br/>
 <span>
-	<a  href="/2014/05/14/feature-selection-in-text-classfication/" class="pageNav"  >Previous</a>
+	<a  href="/2014/06/16/logistic-regression-introduction/" class="pageNav"  >Previous</a>
 	&nbsp;&nbsp;&nbsp;
-	<a  href="/2014/06/24/derivative-gradient/" class="pageNav"  >Next</a>
+	<a   class="pageNavInvalid"  >Next</a>
 </span>
 <hr>
 <span class="author">
@@ -201,7 +154,7 @@ L(w)=&\sum^{N}_{i=1}[y_ilog\pi(x_i)+(1-y_i)log(1-\pi(x_i))]\\
 </span>
 <span class="time">
   /
-  <time datetime="2014-06-16">2014-06-16</time>
+  <time datetime="2014-06-24">2014-06-24</time>
 </span>
 <br />
 <span class="license">
@@ -219,7 +172,7 @@ L(w)=&\sum^{N}_{i=1}[y_ilog\pi(x_i)+(1-y_i)log(1-\pi(x_i))]\\
 <span class="tags">
   tagged with 
   
-  <a href="/tags/#logistic regression" title="logistic regression">logistic regression</a>&nbsp;
+  <a href="/tags/#gradient" title="gradient">gradient</a>&nbsp;
   
 </span>
 
